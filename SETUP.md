@@ -17,10 +17,10 @@ psuc-forum/
 │   │
 │   ├── Modules/                       # Business domains
 │   │   ├── Auth/
-│   │   │   ├── Controllers/
-│   │   │   ├── Services/
-│   │   │   ├── Repositories/
-│   │   │   └── Views/
+│   │   │   ├── Controllers/ LoginController.php RegisterController.php LogoutController.php
+│   │   │   ├── Services/ AuthService.php UserService.php RoleService.php
+│   │   │   ├── Repositories/ UserRepository.php RoleRepository.php SessionRepository.php
+│   │   │   └── Views/ LoginView.php RegisterView.php LogoutView.php
 │   │   ├── Forum/
 │   │   │   ├── Controllers/
 │   │   │   ├── Services/
