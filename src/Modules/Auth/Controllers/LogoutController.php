@@ -1,9 +1,18 @@
 <?php
-require_once 'includes/auth.php';
+namespace App\Modules\Auth\Controllers;
 
-$auth = new Auth();
-$auth->logout();
+use App\Modules\Auth\Services\AuthService;
 
-header('Location: index.php');
-exit;
-?>
+class LogoutController {
+    private $authService;
+
+    public function __construct(AuthService $authService) {
+        $this->authService = $authService;
+    }
+
+    public function index() {
+        $this->authService->logout();
+        header('Location: index.php');
+        exit;
+    }
+}
