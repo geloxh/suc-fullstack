@@ -24,4 +24,30 @@ class PostRepository {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getPostCount($topic_id) {
+        $query = "SELECT COUNT(*) as count FROM posts WHERE topic_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$topic_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    }
+
+    public function create($topic_id, $user_id, $content) {
+        $query = "INSERT INTO posts (topic_id, user_id, content) VALUES (?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$topic_id, $user_id, $content]);
+        return $this->conn->lastInsertId();
+    }
+
+    public function update($post_id, $content) {
+        $query = "UPDATE posts SET content = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$content, $post_id]);
+    }
+
+    public function delete($post_id) {
+        $query = "DELETE FROM posts WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$post_id]);
+    }
 }

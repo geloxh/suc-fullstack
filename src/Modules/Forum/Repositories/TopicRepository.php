@@ -24,4 +24,40 @@ class TopicRepository {
         $stmt->bindValue(3, (int) $offset, PDO::PARAM_INT);
         return $stmt->fetchAll(PDO::FECTH_ASSOC);
     }
+
+    public function getTopicById($topic_id) {
+        $query = "SELECT t.*, u.username, u.avatar, u.reputation, u.role, f.name as forum_name
+                FROM topics t
+                JOIN users u ON t.user_id = u.id
+                JOIN forums f ON t.forum_id = f.id
+                WHERE t.id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$topic_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($forum_id, $user_id, $title, $content) {
+        $query = "INSERT INTO topics (forum_id, user_id, title, content) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$forum_id, $user_id, $title, $content]);
+        return $this->conn->lastInsertId();
+    }
+
+    public function update($topic_id, $title, $content) {
+        $query = "UPDATE topics SET title = ?, content = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$title, $content, $topic_id]);
+    }
+
+    public function delete($topic_id) {
+        $query = "DELETE FROM topics WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$topic_id]);
+    }
+
+    public function incrementViews($topic_id) {
+        $query = "UPDATE topics SET views = views + 1 WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$topic_id]);
+    }
 }

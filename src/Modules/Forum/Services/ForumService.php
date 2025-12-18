@@ -1,0 +1,24 @@
+<?php
+namespace App\Modules\Forum\Services;
+
+use App\Modules\Forum\Repositories\ForumRepository;
+
+class ForumService {
+    private $forumRepository;
+
+    public function __construct(ForumRepository $forumRepository) {
+        $this->forumRepository = $forumRepository;
+    }
+
+    public function getCategories() {
+        return $this->forumRepository->getCategories();
+    }
+
+    public function getForumsByCategory($category_id) {
+        return $this->forumRepository->getForumsByCategory($category_id);
+    }
+
+    public function getForumById($forum_id) {
+        return $this->forumRepository->getForumById($forum_id);
+    }
+}
