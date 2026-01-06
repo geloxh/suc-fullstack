@@ -1,13 +1,13 @@
 <?php
-    require_once 'includes/auth.php';
-    require_once 'includes/forum.php';
-    require_once 'includes/web_sidebar.php';
-    require_once 'config/database.php';
 
-    $auth = new Auth();
-    $forum = new Forum();
-    $user = $auth -> getCurrentUser();
-    $categories = $forum -> getCategories();
+    if (!session_station() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    require_once __DIR__ .'/../includes/auth.php';
+    require_once __DIR__ . '/../includes/forum.php';
+    require_once __DIR__ . '/../includes/web_sidebar.php';
+    require_once __DIR__ . '/../config/database.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -146,7 +146,7 @@
 
 <body>
 
-    <?php include 'includes/header.php'; ?>
+    <?php include '../includes/header.php'; ?>
     <?php renderDropdownSidebar(); ?>
 
     <main class="container">
@@ -477,7 +477,7 @@
             </aside>
         </div>
     </main>
-    <?php require_once 'includes/footer.php'; ?>
+    <?php require_once '../includes/footer.php'; ?>
     
     <!-- ===== MAIN JS ===== -->
     <script src="assets/scripts/main.js"></script>
