@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $host = 'localhost';
-    private $db_name = 'psuc_forum';
+    private $db_name = 'psuc_db';
     private $username = 'root';
     private $password = '';
     public $conn;

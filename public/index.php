@@ -1,12 +1,11 @@
 <?php
-
-    if (!session_station() == PHP_SESSION_NONE) {
-        session_start();
-    }
-    require_once __DIR__ .'/../includes/auth.php';
+    require_once __DIR__ . '/../includes/auth.php';
     require_once __DIR__ . '/../includes/forum.php';
     require_once __DIR__ . '/../includes/web_sidebar.php';
     require_once __DIR__ . '/../config/database.php';
+
+    $auth = new Auth();
+    $user = $auth->getCurrentUser();
 
 ?>
 
@@ -17,14 +16,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page - PSUC Forum</title>
     <!-- ===== CSS ===== -->
-    <link rel="stylesheet" href="assets/stylesheets/main.css">
-    <link rel="stylesheet" href="assets/stylesheets/media-preview.css">
+    <link rel="stylesheet" href="../assets/stylesheets/main.css">
+    <link rel="stylesheet" href="../assets/stylesheets/media-preview.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
     /* Mobile-First Responsive Styles */
-
     .timeline-feed { max-width: 100%; padding: 0; }
     .empty-feed { text-align: center; padding: 40px 16px; color: #65676b; }
     .empty-feed i { font-size: 48px; color: #e4e6ea; margin-bottom: 16px; }
@@ -146,7 +144,7 @@
 
 <body>
 
-    <?php include '../includes/header.php'; ?>
+    <?php include __DIR__ . '/../includes/header.php'; ?>
     <?php renderDropdownSidebar(); ?>
 
     <main class="container">
@@ -175,19 +173,15 @@
                                             t.content,
                                             t.created_at,
                                             t.views,
+                                            t.replies_count,
                                             u.username,
                                             u.avatar,
-                                            f.name as forum_name,
-                                            (SELECT COUNT(*) FROM posts p WHERE p.topic_id = t.id) as reply_count
-                                        FROM 
-                                            topics t
-                                        JOIN 
-                                            users u ON t.user_id = u.id
-                                        JOIN 
-                                            forums f ON t.forum_id = f.id
-                                        ORDER BY 
-                                            t.created_at DESC
-                                        LIMIT 10";
+                                            f.name as forum_name
+                                            FROM topics t
+                                            JOIN users u ON t.user_id = u.id
+                                            JOIN forums f ON t.forum_id = f.id                                           
+                                            ORDER BY t.created_at DESC                                           
+                                            LIMIT 10";
                         $stmt = $conn -> prepare($topics_query);
                         $stmt -> execute();
                         $topics = $stmt -> fetchAll(PDO::FETCH_ASSOC);
@@ -279,7 +273,7 @@
                             <footer class="post-footer">
                                 <div class="post-stats">
                                     <span><i class="fas fa-eye"></i> <?php echo $topic['views']; ?></span>
-                                    <span><i class="fas fa-comments"></i> <?php echo $topic['reply_count']; ?></span>
+                                    <span><i class="fas fa-comments"></i> <?php echo $topic['replies_count']; ?></span>
                                 </div>
                                 <div class="post-actions">
                                     <a href="topic.php?id=<?php echo $topic['id']; ?>" class="action-btn">
@@ -477,10 +471,10 @@
             </aside>
         </div>
     </main>
-    <?php require_once '../includes/footer.php'; ?>
+    <?php require_once __DIR__ . '/../includes/footer.php'; ?>
     
     <!-- ===== MAIN JS ===== -->
-    <script src="assets/scripts/main.js"></script>
+    <script src="../assets/scripts/main.js"></script>
     <script>
         // mobile interactions
         document.addEventListener('DOMContentLoaded', function() {
