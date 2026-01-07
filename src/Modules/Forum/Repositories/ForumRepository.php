@@ -1,5 +1,5 @@
 <?php
-namespace App\Mpdules\Forum\Repositories;
+namespace App\Modules\Forum\Repositories;
 
 use PDO;
 
@@ -18,17 +18,24 @@ class ForumRepository {
     }
 
     public function getForumsByCategory($category_id) {
-        $query = "SELECT f.*,
-                (SELECT COUNT(*) FROM topics WHERE forum_id = f.id) as topics_count,
-                (SELECT COUNT(*) FROM posts p JOIN topics t ON p.topic_id = t.id WHERE t.forum_id = f.id) as posts_count
-                FROM forums f WHERE category_id = ? ORDER BY position, name";
+        $query = "SELECT f.*, 
+              (SELECT COUNT(*) FROM topics WHERE forum_id = f.id) as topics_count,
+              (SELECT COUNT(*) FROM posts p JOIN topics t ON p.topic_id = t.id WHERE t.forum_id = f.id) as posts_count
+              FROM forums f WHERE category_id = ? ORDER BY position, name";
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$category_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getForumById($forum_id) {
-        $query = "SELECT f.*, c.name as category_name FROM forums f JOIN categories c ON f.category_id = c.id WHERE f.id = ?";
+    public function createTopic($forum_id, $user_id, $title, $content) {
+        $query = "INSERT INTO topics (forum_id, user_id, title, content) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$forum_id, $user_id, $title, $content]);
+        return $this->conn->lastInsertId();
+    }
+
+    public function getForumInfo($forum_id) {
+        $query = "SELECT name FROM forums WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$forum_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

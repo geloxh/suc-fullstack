@@ -1,18 +1,15 @@
 <?php
 namespace App\Modules\Auth\Controllers;
 
-use App\Modules\Auth\Services\AuthService;
+use App\Web\Controllers\BaseController;
 
-class LogoutController {
-    private $authService;
-
-    public function __construct(AuthService $authService) {
-        $this->authService = $authService;
-    }
-
+class LogoutController extends BaseController {
     public function index() {
-        $this->authService->logout();
-        header('Location: index.php');
-        exit;
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        session_destroy();
+        $this->redirect('/login');
     }
 }

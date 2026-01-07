@@ -1,47 +1,48 @@
 <?php
 namespace App\Modules\Auth\Controllers;
 
-use App\Modules\Auth\Services\AuthService;
+use App\Web\Controllers\BaseController;
 
-class RegisterController {
-    private $authService;
-
-    public function __construct(AuthService $authService) {
-        $this->authService = $authService;
-    }
-
+class RegisterController extends BaseController {
     public function index() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        $this->render('auth/register', ['error' => '', 'success' => '']);
+    }
+    
+    public function store() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        require_once __DIR__ . '/../../../../config/database.php';
+        require_once __DIR__ . '/../Services/AuthService.php';
+        
+        $database = new \Database();
+        $auth = new \App\Modules\Auth\Services\AuthService($database->getConnection());
+        
         $error = '';
-        $success = '';
-
-        if ($_POST) {
-            $username = trim($_POST['username']);
-            $email = trim($_POST['email']);
-            $password = trim($_POST['password']);
-            $full_name = trim($_POST['full_name']);
-            $university = trim($_POST['university']);
-            $role = trim($_POST['role']);
-
-            if ($_POST['password'] !== $_POST['confirm_password']) {
-                $error = "Passwords do not match.";
-            } elseif (strlen($password) < 6) {
-                $error = "Password must be at least 6 characters long.";
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error = "Please enter a valid email address.";
-            } elseif ($this->authService->emailExists($email)) {
-                $error = "Existing Email User Account.";
-            } elseif (empty($username) || empty($full_name) || empty($university) || empty($role)) {
-                $error = "Please fill in all required fields.";
+        
+        if ($_POST['password'] !== $_POST['confirm_password']) {
+            $error = "Passwords do not match.";
+        } elseif (strlen($_POST['password']) < 6) {
+            $error = "Password must be at least 6 characters long.";
+        } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $error = "Please enter a valid email address.";
+        } elseif ($auth->emailExists($_POST['email'])) {
+            $error = "Email already exists.";
+        } else {
+            if ($auth->register($_POST['username'], $_POST['email'], $_POST['password'], 
+                              $_POST['full_name'], $_POST['university'], $_POST['role'])) {
+                $this->render('auth/register', ['success' => 'Registration successful. You can now login.', 'error' => '']);
+                return;
             } else {
-                if ($this->authService->register($username, $email, $password, $full_name, $university, $role)) {
-                    $success = "Registration successful. You can now login.";
-                    $_POST = [];
-                } else {
-                    $error = "Registration failed. Username or email may already exist.";
-                }
+                $error = "Registration failed.";
             }
         }
-
-        include __DIR__ . '/../views/register.php';
+        
+        $this->render('auth/register', ['error' => $error, 'success' => '']);
     }
 }

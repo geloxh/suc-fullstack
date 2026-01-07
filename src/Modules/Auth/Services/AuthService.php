@@ -1,52 +1,57 @@
 <?php
 namespace App\Modules\Auth\Services;
 
-use App\Modules\Auth\Repositories\UserRepository;
-
 class AuthService {
-    private $userRepository;
+    private $conn;
 
-    public function __construct(UserRepository $userRepository) {
-        $this->userRepository = $userRepository;
+    public function __construct($connection) {
+        $this->conn = $connection;
     }
 
     public function login($username, $password) {
-        $user = $this->userRepository->findByUsernameOrEmail($username);
-
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['full_name'] = $user['full_name'];
-
-            $this->userRepository->updateLastActive($user['id']);
-            return true;
+        $query = "SELECT id, username, email, password, role, full_name FROM users WHERE (username = ? OR email = ?) AND status = 'active'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$username, $username]);
+        
+        if($stmt->rowCount() > 0) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if(password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['full_name'] = $user['full_name'];
+                return true;
+            }
         }
         return false;
     }
 
     public function register($username, $email, $password, $full_name, $university, $role) {
-        return  $this->userRepository->create($username, $email, $password, $full_name, $university, $role);
+        $query = "INSERT INTO users (username, email, password, full_name, university, role) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        return $stmt->execute([$username, $email, $hashed_password, $full_name, $university, $role]);
     }
 
-    public function logout() {
-        session_destroy();
-        return true;
-    }
-
-    public function isLoggedIn() {
-        return isset($_SESSION['user_id']);
+    public function emailExists($email) {
+        $query = "SELECT id FROM users WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$email]);
+        return $stmt->rowCount() > 0;
     }
 
     public function getCurrentUser() {
-        if (isset($_SESSION['user_id'])) {
-            return $this->userRepository->findById($_SESSION['user_id']);
+        if(isset($_SESSION['user_id'])) {
+            $query = "SELECT id, username, email, full_name, role, university, avatar, status, reputation, created_at FROM users WHERE id = ?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([$_SESSION['user_id']]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
         return null;
     }
 
-    public function emailExists($email) {
-        return $this->userRepository->emailExists($email);
+    public function isLoggedIn() {
+        return isset($_SESSION['user_id']);
     }
 
     public function isAdmin() {
