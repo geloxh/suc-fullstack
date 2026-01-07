@@ -45,7 +45,11 @@ class Router {
     }
 
     private function matchPath($routePath, $uri) {
-        return $routePath === $uri || $routePath === parse_url($uri, PHP_URL_PATH);
+    // Handle dynamic routes like /forum/{id}
+        $routePattern = preg_replace('/\{[^}]+\}/', '([^/]+)', $routePath);
+        $routePattern = '#^' . $routePattern . '$#';
+    
+        return preg_match($routePattern, $uri);
     }
 
     private function callHandler($handler) {
