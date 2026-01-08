@@ -9,7 +9,7 @@ use App\Core\Router\Router;
 $container = new ServiceContainer();
 
 $container->bind('database', function() {
-    require_once __DIR__ . '/../config/database.php';
+    require_once __DIR__ . '/../src/Core/Database/Connection.php';
     return new Database();
 });
 
