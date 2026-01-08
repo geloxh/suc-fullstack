@@ -1,16 +1,17 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php'; // Composer Autoloader
+require_once __DIR__ . '/../vendor/autoload.php'; // Compose Autoloader
 require_once __DIR__ . '/../src/Core/Container/ServiceContainer.php';
 require_once __DIR__ . '/../src/Core/Router/Router.php';
+require_once __DIR__ . '/../src/Core/Database/Connection.php';
 
 use App\Core\Container\ServiceContainer;
 use App\Core\Router\Router;
+use App\Core\Database\Connection;
 
 $container = new ServiceContainer();
 
 $container->bind('database', function() {
-    require_once __DIR__ . '/../src/Core/Database/Connection.php';
-    return new Database();
+    return Connection::getInstance();
 });
 
 $router = new Router($container);
