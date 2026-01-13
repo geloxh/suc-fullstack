@@ -28,11 +28,26 @@ class ProfileController {
     }
 
     public function uploadAvatar() {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: login.php');
+        if (!isset($_SESSION['user_id']) || !isset($_FILES['avatar'])) {
+            header('Location: /profile');
             exit;
         }
 
+        $file = $_FILES['avatar'];
+        $userId = $_SESSION['user_id'];
+
+        // Validate file
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($file['type'], $allowedTypes)) {
+            $_SESSION['error'] = 'Invalid file type';
+            header("Location: /profile");
+            exit;
+        }
+
+        // Generate Filename
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = $userId . '_' . time() . '.' . $extension;
+        $uploadPath = __DIR__ . '/../../../../assets/avatars'
         try {
             if (isset($_FILES['avatar'])) {
                 $this->userService->updateAvatar($_SESSION['user_id'], $_FILES['avatar']);
