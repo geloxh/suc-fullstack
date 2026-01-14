@@ -47,17 +47,16 @@ class ProfileController {
         // Generate Filename
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = $userId . '_' . time() . '.' . $extension;
-        $uploadPath = __DIR__ . '/../../../../assets/avatars'
-        try {
-            if (isset($_FILES['avatar'])) {
-                $this->userService->updateAvatar($_SESSION['user_id'], $_FILES['avatar']);
-                $_SESSION['upload_success'] = 'Avatar Updated successfully.';
-            }
-        } catch (\Exception $e) {
-            $_SESSION['upload_error'] = $e->getMessage();
+        $uploadPath = __DIR__ . '/../../../../assets/avatars' . $filename;
+
+        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            $this->userService->updateAvatar($userId, $filename);
+            $_SESSION['success'] = 'Avatar updated successfully';
+        } else {
+            $_SESSION['error'] = 'Upload failed';
         }
 
-        header('Location: profile.php');
+        header('Location: /profile');
         exit;
     }
 }

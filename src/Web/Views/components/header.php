@@ -18,19 +18,42 @@ $user = $authService->getCurrentUser();
                 <img src="/psuc-fullstack/assets/imgs/suc-logo.jpg" alt="SUC Forum Logo" style="height: 60px;">
             </a>
 
+            <button class="mobile-nav-toggle" id="mobileNavToggle">
+                <i class="fas fa-bars"></i>
+            </button>
 
-            <nav class="nav">
+            <nav class="nav" id="navMenu">
                 <ul class="nav-menu">
                     <li><a href="/psuc-fullstack"><i class="fas fa-home"></i>Home</a></li>
+                    <li class="user-menu dropdown-toggle">
+                        <a href="#"><i class="fas fa-graduation-cap"></i>Academic <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown">
+                            <a href="/psuc-fullstack/calendar"><i class="fas fa-calendar-alt">Academic Calendar</i></a>
+                            <a href="/psuc-fullstack/documents"><i class="fas fa-file-alt"></i>Document Library</a>
+                            <a href="/psuc-fullstack/research"><i class="fas fa-microscope"></i>Researcch Hub</a>
+                        </div>
+                    </li>
+                    <li class="user-menu dropdown-toggle">
+                        <a href="#"><i class="fas fa-users"></i>Community <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown">
+                            <a href="/psuc-fullstack/events"><i class="fas fa-calendar"></i>Events</a>
+                            <a href="/psuc-fullstack/jobs"><i class="fas fa-briefcase"></i>Job Board</a>
+                            <a href="/psuc-fullstack/groups"><i class="fas fa-university"></i>University Groups</a>
+                        </div>
+                    </li>
+                    <li><a href="/psuc-fullstack/about"><i class="fas fa-info-circle"></i>About</a></li>
+                    <li><a href="/psuc-fullstack/search"><i class="fas fa-search"></i>Search</a></li>
                     <?php if($user): ?>
-                        <li><a href="/psuc-fullstack/messages"><i class="fas fa-envelope"></i>Messages</a></li>
+                        <li><a href="/psuc-fullstack/messages"><i class="fas fa-info-circle"></i>About</a></li>
+                        <li><a href="/psuc-fullstack/notifications"><i class="fas fa-bell"></i>Notifications</a></li>
                         <li class="user-menu dropdown-toggle">
                             <a href="#">
                                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($user['username']); ?>
-                                <i class="fas fa-chevron-down"></i>
+                                <i class="fasf fa-chevron-down"></i>
                             </a>
                             <div class="dropdown">
                                 <a href="/psuc-fullstack/profile"><i class="fas fa-user-circle"></i>Profile</a>
+                                <a href="/psuc-fullstack/settings"><i class="fas fa-cog"></i>Settings</a>
                                 <?php if($user['role'] == 'admin'): ?>
                                     <a href="/psuc-fullstack/admin"><i class="fas fa-shield-alt"></i>Admin Panel</a>
                                 <?php endif; ?>
@@ -46,3 +69,5 @@ $user = $authService->getCurrentUser();
         </div>
     </div>
 </header>
+
+<script src="/psuc-fullstack/assets/scripts/main.js"></script>
