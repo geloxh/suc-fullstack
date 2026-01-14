@@ -39,3 +39,46 @@ foreach($categories as $category) {
         <?php endforeach; ?>
     </div>
 </div>
+
+<script>
+    function toggleCategory(categoryId) {
+        const forums = document.getElementById('forums-' + categoryId);
+        const arrow = document.getElementById('arrow-' + categoryId);
+
+        if (forums.classList.contains('open')) {
+            forums.classList.remove('open');
+            arrow.classList.remove('rotated');
+        } else {
+            forums.classList.add('open');
+            arrow.classList.add('rotated');
+        }
+    }
+
+    function navigateToForum(forumId) {
+        window.location.href = '/psuc-fullstack/forum/' + forumId;
+    }
+
+    function toggleMobileSidebar() {
+        const sidebar = document.getElementById('dropdownSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const body = document.body;
+
+        if (sidebar.classList.contains('mobile-open')) {
+            closeMobileSidebar();
+        } else {
+            sidebar.classList.add('mobile-open');
+            overlay.classList.add('active');
+            body.classList.add('sidebar-open');
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('dropdownSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const body = document.body;
+
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+            body.classList.remove('sidebar-open');
+        }
+    }
+</script>
