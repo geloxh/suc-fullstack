@@ -24,11 +24,13 @@ $container->bind(AuthService::class, function($container) {
 });
 
 $container->bind(ForumService::class, function($container) {
-    return new ForumService($container->get('database')->getConnection());
+    $forumRepository = new \App\Modules\Forum\Repositories\ForumRepository($container->get('database')->getConnection());
+    return new ForumService($forumRepository);
 });
 
 $container->bind(TopicService::class, function($container) {
-    return new TopicService($container->get('database')->getConnection());
+    $topicRepository = new \App\Modules\Forum\Repositories\TopicRepository($container->get('database')->getConnection());
+    return new TopicService($topicRepository);
 });
 
 $container->bind(UserService::class, function($container) {
