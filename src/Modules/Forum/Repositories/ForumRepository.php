@@ -29,7 +29,7 @@ class ForumRepository {
 
     public function getRecentTopics($limit = 10) {
         $query = "SELECT t.*, u.username, f.name as forum_name,
-            (SELECT COUNT(*) FROM posts WHERE topic_id = t,id) as replies_count
+            (SELECT COUNT(*) FROM posts WHERE topic_id = t.id) as replies_count
             FROM topics t
             JOIN users u ON t.user_id = u.id
             JOIN forums f ON t.forum_id = f.id
