@@ -5,16 +5,15 @@
     </div>    
 
     
-    <?php foreach($categories as $category): ?>
-        <div class="category-section">
-            <h2><?php echo htmlspecialchars($category['name']); ?></h2>
-            
-            <?php foreach($category['forums'] as $forum): ?>
-                <div class="forum-item">
-                    <h3><a href="/suc-fullstack/forum/<?php echo $forum['id']; ?>"><?php echo htmlspecialchars($forum['name']); ?></a></h3>
-                    <p><?php echo htmlspecialchars($forum['description'] ?? ''); ?></p>
+    <?php if (!empty($recentTopics)): ?>
+        <div class="recent-topics-section">
+            <h2>Recent Discussions</h2>
+            <?php foreach($recentTopics as $topic): ?>
+                <div class="topic-item">
+                    <h3><a href="/suc-fullstack/topic/<?php echo $topic['id']; ?>"><?php echo htmlspecialchars($topic['title']); ?></a></h3>
+                    <p>by <?php echo htmlspecialchars($topic['username']); ?> in <?php echo htmlspecialchars($topic['forum_name']); ?></p>
                 </div>
             <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
+    <?php endif; ?>
 </div>

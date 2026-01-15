@@ -18,12 +18,20 @@ class HomeController extends BaseController {
         $authService = new \App\Modules\Auth\Services\AuthService($database->getConnection());
 
         $user = $authService->getCurrentUser();
+        $categories = $forumRepository->getCategories();
+
+        // Get forums for each category
+        foreach ($categories as &$category) {
+            $category['forums'] = $forumRepository->getForumsByCategory($category['id']);
+        }
+
         $recentTopics = $forumRepository->getRecentTopics(10);
         $stats = $forumRepository->getForumStats();
 
         $this->render('forum/home', [
             'title' => 'SUC Forum - Home',
             'user' => $user,
+            'categories' => $categories,
             'recentTopics' => $recentTopics,
             'stats' => $stats
         ]);
