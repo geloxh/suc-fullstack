@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page - PSUC Forum</title>
+    <title>Home Page - SUC-Industry Collaboration Forum</title>
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="assets/stylesheets/main.css">
     <link rel="stylesheet" href="assets/stylesheets/media-preview.css">
@@ -154,7 +154,7 @@
             <div class="forum-content">
                 <div class="hero-section">
                     <div class="hero-content">
-                        <h1 class="hero-title"><i class="fas fa-graduation-cap"></i> Welcome to PSUC Forum</h1>
+                        <h1 class="hero-title"><i class="fas fa-graduation-cap"></i> Welcome to SUC-Industry Collaboration Forum</h1>
                         <p class="hero-subtitle">Connect, collaborate, and share knowledge with fellow students and faculty from Philippine State Universities and Colleges.</p>
                     </div>
                 </div>

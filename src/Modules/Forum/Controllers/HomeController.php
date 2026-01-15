@@ -18,18 +18,14 @@ class HomeController extends BaseController {
         $authService = new \App\Modules\Auth\Services\AuthService($database->getConnection());
 
         $user = $authService->getCurrentUser();
-        $categories = $forumRepository->getCategories();
-       
-        $categoriesWithForums = [];
-        foreach ($categories as $category) {
-            $category['forums'] = $forumRepository->getForumsByCategory($category['id']);
-            $categoriesWithForums[] = $category;
-        }
+        $recentTopics = $forumRepository->getRecentTopics(10);
+        $stats = $forumRepository->getForumStats();
 
         $this->render('forum/home', [
             'title' => 'PSUC Forum - Home',
             'user' => $user,
-            'categories' => $categoriesWithForums
+            'recentTopics' => $recentTopics,
+            'stats' => $stats
         ]);
     }
 }

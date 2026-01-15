@@ -1,5 +1,9 @@
-<div class="container">
-    <h1>Welcome to PSUC Forum</h1>
+<div class="container" style="padding: 2rem 1rem;">
+    <div class="hero-section">
+        <h1 class="hero-title">Welcome to SUC-Industry Collaboration Forum</h1>
+        <p class="hero-subtitle">Connect with students and faculty from Philippines State Universities and Colleges</p>
+    </div>    
+
     
     <?php foreach($categories as $category): ?>
         <div class="category-section">

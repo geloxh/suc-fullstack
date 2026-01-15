@@ -27,6 +27,30 @@ class ForumRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getRecentTopics($limit = 10) {
+        $query = "SELECT t.*, u.username, f.name as forum_name,
+            (SELECT COUNT(*) FROM posts WHERE topic_id = t,id) as replies_count
+            FROM topics t
+            JOIN users u ON t.user_id = u.id
+            JOIN forums f ON t.forum_id = f.id
+            ORDER BY t.created_at DESC
+            LIMIT ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
+
+    public function getForumStats() {
+        $query = "SELECT
+            (SELECT COUNT(*) FROM topics) as total_topics,
+            (SELECT COUNT(*) FROM posts) as total_posts,
+            (SELECT COUNT(*) FROM users) as total_users";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function createTopic($forum_id, $user_id, $title, $content) {
         $query = "INSERT INTO topics (forum_id, user_id, title, content) VALUES (?, ?, ?, ?)";
         $stmt = $this->conn->prepare($query);
