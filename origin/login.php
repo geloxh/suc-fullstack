@@ -1,16 +1,24 @@
 <?php
-$error = $error ?? '';
-$success = $success ?? '';
-$universities = $universities ?? [];
-$formData = $formData ?? [];
-?>
+require_once 'includes/auth.php';
 
+$auth = new Auth();
+$error = '';
+
+if($_POST) {
+    if($auth->login($_POST['username'], $_POST['password'])) {
+        header('Location: index.php');
+        exit;
+    } else {
+        $error = 'Invalid credentials';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - PSUC Forum</title>
+    <title>Login - PSUC Forum</title>
     <style>
         @import url('https://fonts.cdnfonts.com/css/optima');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,9 +35,9 @@ $formData = $formData ?? [];
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 3rem 2.5rem;
+            padding: 3rem;
             width: 100%;
-            max-width: 480px;
+            max-width: 400px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
@@ -59,7 +67,7 @@ $formData = $formData ?? [];
         .form-group {
             margin-bottom: 1.5rem;
         }
-        input, select {
+        input {
             width: 100%;
             padding: 1rem;
             border: 2px solid #e2e8f0;
@@ -68,7 +76,7 @@ $formData = $formData ?? [];
             background: #f7fafc;
             transition: all 0.2s ease;
         }
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: #4299e1;
             background: white;
@@ -100,15 +108,6 @@ $formData = $formData ?? [];
             font-size: 0.9rem;
             border-left: 4px solid #e53e3e;
         }
-        .success {
-            background: #c6f6d5;
-            color: #2f855a;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            border-left: 4px solid #38a169;
-        }
         .links {
             text-align: center;
             font-size: 0.9rem;
@@ -125,7 +124,7 @@ $formData = $formData ?? [];
         }
         @media (max-width: 480px) {
             .container {
-                padding: 2rem 1.5rem;
+                padding: 2rem;
                 margin: 1rem;
             }
         }
@@ -134,59 +133,27 @@ $formData = $formData ?? [];
 <body>
     <div class="container">
         <div class="logo">
-            <img src="/assets/imgs/suc-logo.jpg" alt="PSUC Logo" class="logo-img">
+            <img src="assets/imgs/suc-logo.jpg" alt="PSUC Logo" class="logo-img">
             <h1>PSUC Forum</h1>
-            <p class="subtitle">Join the community</p>
+            <p class="subtitle">Welcome back! Sign in to continue</p>
         </div>
-                
+        
         <?php if($error): ?>
-            <div class="error"><?php echo htmlspecialchars($error); ?></div>
+            <div class="error"><?php echo $error; ?></div>
         <?php endif; ?>
         
-        <?php if($success): ?>
-            <div class="success"><?php echo htmlspecialchars($success); ?></div>
-        <?php endif; ?>
-                
-        <form method="POST" action="/register">
+        <form method="POST">
             <div class="form-group">
-                <input type="text" name="full_name" placeholder="Full Name" required value="<?php echo htmlspecialchars($formData['full_name'] ?? ''); ?>">
+                <input type="text" name="username" placeholder="Username or Email" required>
             </div>
             <div class="form-group">
-                <input type="text" name="username" placeholder="Username" required value="<?php echo htmlspecialchars($formData['username'] ?? ''); ?>">
+                <input type="password" name="password" placeholder="Password" required>
             </div>
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email" required value="<?php echo htmlspecialchars($formData['email'] ?? ''); ?>">
-            </div>
-            <div class="form-group">
-                <select name="university" required>
-                    <option value="">Select your institution</option>
-                    <?php foreach($universities as $group => $unis): ?>
-                        <optgroup label="<?php echo htmlspecialchars($group); ?>">
-                            <?php foreach($unis as $uni): ?>
-                                <option value="<?php echo htmlspecialchars($uni); ?>" <?php echo (isset($formData['university']) && $formData['university'] == $uni) ? 'selected' : ''; ?>><?php echo htmlspecialchars($uni); ?></option>
-                            <?php endforeach; ?>
-                        </optgroup>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <select name="role" required>
-                    <option value="college student" <?php echo (isset($formData['role']) && $formData['role'] == 'college student') ? 'selected' : ''; ?>>College Student</option>
-                    <option value="faculty" <?php echo (isset($formData['role']) && $formData['role'] == 'faculty') ? 'selected' : ''; ?>>Faculty</option>
-                    <option value="other" <?php echo (isset($formData['role']) && $formData['role'] == 'other') ? 'selected' : ''; ?>>Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password" required minlength="6">
-            </div>
-            <div class="form-group">
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required minlength="6">
-            </div>
-            <button type="submit">Register</button>
+            <button type="submit">Sign In</button>
         </form>
         
         <div class="links">
-            <a href="/login">Already have an account?</a> • <a href="/">Back to forum</a>
+            <a href="register.php">Create account</a> • <a href="index.php">Back to forum</a>
         </div>
     </div>
 </body>
