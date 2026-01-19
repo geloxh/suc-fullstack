@@ -1,17 +1,5 @@
 <?php
-require_once 'includes/auth.php';
-
-$auth = new Auth();
-$error = '';
-
-if($_POST) {
-    if($auth->login($_POST['username'], $_POST['password'])) {
-        header('Location: index.php');
-        exit;
-    } else {
-        $error = 'Invalid credentials';
-    }
-}
+$error = $error ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -133,16 +121,16 @@ if($_POST) {
 <body>
     <div class="container">
         <div class="logo">
-            <img src="assets/imgs/suc-logo.jpg" alt="PSUC Logo" class="logo-img">
-            <h1>SUC Forum</h1>
+            <img src="/suc-fullstack/assets/imgs/suc-logo.jpg" alt="SUC Logo" class="logo-img">
+            <h1>SUC-Industry Collaboration Forum</h1>
             <p class="subtitle">Welcome back! Sign in to continue</p>
         </div>
         
         <?php if($error): ?>
-            <div class="error"><?php echo $error; ?></div>
+            <div class="error"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
         
-        <form method="POST">
+        <form method="POST" action="/suc-fullstack/login">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username or Email" required>
             </div>
@@ -153,7 +141,7 @@ if($_POST) {
         </form>
         
         <div class="links">
-            <a href="register.php">Create account</a> • <a href="index.php">Back to forum</a>
+            <a href="/suc-fullstack/src/Modules/Auth/Views/register.php">Create account</a> • <a href="/suc-fullstack/public/">Back to forum</a>
         </div>
     </div>
 </body>

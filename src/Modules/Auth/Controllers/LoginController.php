@@ -3,13 +3,14 @@ namespace App\Modules\Auth\Controllers;
 
 use App\Web\Controllers\BaseController;
 use App\Modules\Auth\Services\AuthService;
+use App\Core\Database\Connection;
 
 class LoginController extends BaseController {
     private $authService;
 
-    public function __construct(AuthService $authService) {
-        parent::__construct();
-        $this->authService = $authService;
+    public function __construct() {
+        $database = Connection::getInstance();
+        $this->authService = new AuthService($database->getConnection());
     }
 
     public function index() {
@@ -17,14 +18,45 @@ class LoginController extends BaseController {
             session_start();
         }
         
-        $this->render('auth/login', ['error' => '']);
+        $error = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $result = $this->authService->login($_POST['username'], $_POST['password']);
+            if ($result['success']) {
+                $this->redirect('/suc-fullstack/');
+            } else {
+                $error = $result['error'];
+            }
+        }
+
+        $this->renderWithoutLayout('auth/login', [
+            'title' => 'Login - SUC Forum',
+            'error' => $error
+        ]);
+
     }
     
     public function store() {
-        if ($this->authService->login($_POST['username'], $_POST['password'])) {
-            $this->redirect('/');
+        return $this->index(); // Handle POST in index method
+    }
+
+    protected function renderWithoutLayout($view, $data = []) {
+        extract($data);
+
+        if (strpos($view, '/') !== false) {
+            $parts = explode('/', $view, 2);
+            $module = ucfirst($parts[0]);
+            $viewFile = $parts[1];
+            $viewPath = __DIR__ . "/../Views/{$viewFile}.php";
         } else {
-            $this->render('auth/login', ['error' => 'Invalid credentials']);
+            $viewPath = __DIR__ . "/../Views/{$view}.php";
+        }
+        
+        if (file_exists($viewPath)) {
+            include $viewPath;
+        } else {
+            echo "View not found: {$view}";
+            exit;
         }
     }
 }

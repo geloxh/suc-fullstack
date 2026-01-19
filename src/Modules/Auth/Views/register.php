@@ -134,7 +134,7 @@ $formData = $formData ?? [];
 <body>
     <div class="container">
         <div class="logo">
-            <img src="assets/imgs/suc-logo.jpg" alt="SUC Logo" class="logo-img">
+            <img src="/suc-fullstack/assets/imgs/suc-logo.jpg" alt="SUC Logo" class="logo-img">
             <h1>SUC-Industry Collaboration Forum</h1>
             <p class="subtitle">Join the community</p>
         </div>
@@ -186,7 +186,7 @@ $formData = $formData ?? [];
         </form>
         
         <div class="links">
-            <a href="/login">Already have an account?</a> • <a href="/suc-fullstack/public/">Back to forum</a>
+            <a href="/suc-fullstack/src/Modules/Auth/Views/login.php">Already have an account?</a> • <a href="/suc-fullstack/public/">Back to forum</a>
         </div>
     </div>
 </body>

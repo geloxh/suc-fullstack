@@ -92,7 +92,7 @@
                         <?php if ($user): ?>
                             <a href="/new-topic" class="btn-create">Create Post</a>
                         <?php else: ?>
-                            <a href="/login" class="btn-create">Sign In</a>
+                            <a href="/suc-fullstack/src/Modules/Auth/Views/login.php" class="btn-create">Sign In</a>
                         <?php endif; ?>
                     </div>
                 <?php else: ?>
