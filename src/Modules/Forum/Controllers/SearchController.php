@@ -15,6 +15,6 @@ class SearchController extends BaseController {
         $query = $_GET['q'] ?? '';
         $results = $query ? $this->searchService->search($query) : [];
         
-        $this->render('search/index', compact('query', 'results'));
+        $this->render('forum/search/index', compact('query', 'results'));
     }
 }

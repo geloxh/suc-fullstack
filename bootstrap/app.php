@@ -41,6 +41,10 @@ $container->bind(ResearchService::class, function($container) {
     return new ResearchService($container->get('database')->getConnection());
 });
 
+$container->bind(\App\Shared\Services\SearchService::class, function($container) {
+    return new \App\Shared\Services\SearchService($container->get('database')->getConnection());
+});
+
 $router = new Router($container);
 
 // Register routes

@@ -18,7 +18,7 @@ class SearchService {
         SELECT 'post' as type, p.id, t.title, p.content, p.created_at, u.username, f.name as forum_name
         FROM posts p
         JOIN topics t ON p.topic_id = t.id
-        JOIN users u ON p.topic_id = u.id
+        JOIN users u ON p.user_id = u.id
         JOIN forum f ON t.forum_id = f.id
         WHERE p.content LIKE ?
         ORDER BY created_at DESC
