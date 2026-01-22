@@ -129,6 +129,50 @@ $formData = $formData ?? [];
                 margin: 1rem;
             }
         }
+
+        .search-dropdown {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border:2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #f7fafc;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-top:none;
+            border-radius: 0 0 12px 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;       
+        }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+        }
+
+        .dropdown-item.selected {
+            background: #e6fffa;
+            color: #2d3748;
+        }
     </style>
 </head>
 <body>
@@ -158,16 +202,11 @@ $formData = $formData ?? [];
                 <input type="email" name="email" placeholder="Email" required value="<?php echo htmlspecialchars($formData['email'] ?? ''); ?>">
             </div>
             <div class="form-group">
-                <select name="university" required>
-                    <option value="">Select your institution</option>
-                    <?php foreach($universities as $group => $unis): ?>
-                        <optgroup label="<?php echo htmlspecialchars($group); ?>">
-                            <?php foreach($unis as $uni): ?>
-                                <option value="<?php echo htmlspecialchars($uni); ?>" <?php echo (isset($formData['university']) && $formData['university'] == $uni) ? 'selected' : ''; ?>><?php echo htmlspecialchars($uni); ?></option>
-                            <?php endforeach; ?>
-                        </optgroup>
-                    <?php endforeach; ?>
-                </select>
+                <div class="search-dropdown">
+                    <input type="text" id="universitySearch" placeholder="Search your institution..." autocomplete="off">
+                    <input type="hidden" name="university" id="universityValue" required>
+                    <div class="dropdown-list" id="universityDropdown"></div>
+                </div>
             </div>
             <div class="form-group">
                 <select name="role" required>
@@ -189,5 +228,41 @@ $formData = $formData ?? [];
             <a href="/suc-fullstack/src/Modules/Auth/Views/login.php">Already have an account?</a> • <a href="/suc-fullstack/public/">Back to forum</a>
         </div>
     </div>
+
+    <script>
+        const universities = <?php echo json_encode(array_merge(...array_values($universities))); ?>;
+        const searchInput = document.getElementById('universitySearch');
+        const hiddenInput = document.getElementById('universityValue');
+        const dropdown = document.getElementById('universityDropdown');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const filtered = universities.filter(uni => uni.toLowerCase().includes(query));
+
+            if (query && filtered.length > 0) {
+                dropdown.innerHTML = filtered.map(uni =>
+                    `<div class="dropdown-item" data-value="${uni}">${uni}</div>`
+                ).join('');
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        dropdown.addEventListener('click', function(e) {
+            if (e.target.classList.contains('dropdown-item')) {
+                const value = e.target.dataset.value;
+                searchInput.value = value;
+                hiddenInput.value = value;
+                dropdown.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
