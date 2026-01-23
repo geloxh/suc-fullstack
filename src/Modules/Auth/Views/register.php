@@ -230,7 +230,7 @@ $formData = $formData ?? [];
     </div>
 
     <script>
-        const universities = <?php echo json_encode(array_merge(...array_values($universities))); ?>;
+        const universities = <?php echo json_encode(!empty($universities) && is_array($universities) ? array_merge(...array_values($universities)) : []); ?>;
         const searchInput = document.getElementById('universitySearch');
         const hiddenInput = document.getElementById('universityValue');
         const dropdown = document.getElementById('universityDropdown');
