@@ -33,6 +33,14 @@ $container->bind(TopicService::class, function($container) {
     return new TopicService($topicRepository);
 });
 
+$container->bind(\App\Modules\Events\Repositories\EventRepository::class, function($container) {
+    return new \App\Modules\Events\Repositories\EventRepository($container->get('database')->getConnection());
+});
+
+$container->bind(\App\Modules\Events\Services\calendarservice::class, function($container) {
+    return new \App\Modules\Events\Services\CalendarService($container->resolve(\App\Modules\Events\Repositories\EventRepository::class));
+});
+
 $container->bind(UserService::class, function($container) {
     return new UserService($container->get('database')->getConnection());
 });

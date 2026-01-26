@@ -3,6 +3,7 @@
         max-width: 800px;
         margin: 2rem auto;
         padding: 0 1rem;
+        min-height: calc(100vh - 260px);
     }
 
     .search-form {

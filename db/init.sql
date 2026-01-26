@@ -154,6 +154,17 @@ CREATE TABLE activity_logs (
     INDEX idx_created (created_at)
 );
 
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_date DATETIME NOT NULL,
+    location VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_event_date (event_date)
+);
+
 -- Insert default system settings
 INSERT INTO system_settings (setting_key, setting_value, setting_type, description, is_public) VALUES
 ('site_name', 'SUC Forum', 'string', 'Website name', TRUE),
@@ -189,3 +200,7 @@ INSERT INTO forums (category_id, name, description, position) VALUES
 (5, 'Campus Life', 'Discuss campus life and experiences', 1),
 (5, 'Organizations & Clubs', 'Student organizations and club activities', 2),
 (5, 'Career & Opportunities', 'Job opportunities, internships, and career advice', 3);
+
+-- Insert sample Events
+INSERT INTO events (title, description, event_date, location) VALUES
+('SUC-Industry Collaboration Forum', 'Collaboration forum site', '2026-01-26 11:00:00', 'H.V. Dela Costa Makati City, The World Center Building, 25th Floor');
