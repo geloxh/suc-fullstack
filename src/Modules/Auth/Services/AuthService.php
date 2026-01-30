@@ -44,17 +44,19 @@ class AuthService {
     }
 
     private function isAccountLocked($username) {
-        $query = "SELECT COUNT(*) as attempts FROM login_attempts WHERE username = ? AND attempted_at > ?";
+        $query = "SELECT COUNT(*) as attempts FROM login_attempts 
+              WHERE username = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL ? SECOND)";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$username, time() - $this->lockoutTime]);
+        $stmt->execute([$username, $this->lockoutTime]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['attempts'] >= $this->maxLoginAttempts;
     }
 
     private function recordFailedAttempt($username) {
-        $query = "INSERT INTO login_attempts (username, attempted_at) VALUES (?, ?)";
+        $query = "INSERT INTO login_attempts (username, ip_address, attempted_at) 
+              VALUES (?, ?, NOW())";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$username, time()]);
+        $stmt->execute([$username, $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1']);
     }
 
     private function clearLoginAttempts($username) {
@@ -83,7 +85,7 @@ class AuthService {
 
             return ['success' => $result, 'message' => $result ? 'Registration successful' : 'Registration failed'];
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Registration failed: ' . $e-getMessage()];
+            return ['success' => false, 'message' => 'Registration failed: ' . $e->getMessage()];
         }
     }
 

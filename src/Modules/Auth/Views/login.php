@@ -126,6 +126,10 @@ $error = $error ?? '';
             <p class="subtitle">Welcome back! Sign in to continue</p>
         </div>
         
+        <?php if(isset($_SESSION['success'])): ?>
+            <div class="success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+        
         <?php if($error): ?>
             <div class="error"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
@@ -141,7 +145,7 @@ $error = $error ?? '';
         </form>
         
         <div class="links">
-            <a href="/suc-fullstack/src/Modules/Auth/Views/register.php">Create account</a> • <a href="/suc-fullstack/public/">Back to forum</a>
+            <a href="/suc-fullstack/register">Create account</a> • <a href="/suc-fullstack/public/">Back to forum</a>
         </div>
     </div>
 </body>

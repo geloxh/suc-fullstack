@@ -55,8 +55,9 @@ class RegisterController extends BaseController {
                 );
 
                 if ($result['success']) {
-                    $success = 'Registration successful! You can now login.';
-                    $formData = [];
+                    $_SESSION['success'] = 'Registration successful! You can now login.';
+                    header('Location: /login');
+                    exit;
                 } else {
                     $error = $result['message'] ?? 'Registration failed. Username or email may already exist.';
                 }
