@@ -90,7 +90,7 @@
                         <h3>No posts yet</h3>
                         <p>Be the first to share something with the community</p>
                         <?php if ($user): ?>
-                            <a href="/new-topic" class="btn-create">Create Post</a>
+                            <a href="/suc-fullstack/new-topic" class="btn-create">Create Post</a>
                         <?php else: ?>
                             <a href="/suc-fullstack/src/Modules/Auth/Views/login.php" class="btn-create">Sign In</a>
                         <?php endif; ?>

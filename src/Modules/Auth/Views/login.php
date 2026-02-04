@@ -136,6 +136,7 @@ $error = $error ?? '';
         
         <form method="POST" action="/suc-fullstack/public">
             <div class="form-group">
+
                 <input type="text" name="username" placeholder="Username or Email" required>
             </div>
             <div class="form-group">
