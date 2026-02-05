@@ -134,7 +134,7 @@ $error = $error ?? '';
             <div class="error"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
         
-        <form method="POST" action="/suc-fullstack/public">
+        <form method="POST" action="/suc-fullstack/login">
             <div class="form-group">
 
                 <input type="text" name="username" placeholder="Username or Email" required>

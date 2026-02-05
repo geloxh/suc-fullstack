@@ -6,7 +6,7 @@ use PDO;
 class AuthService {
     private $conn;
     private $maxLoginAttempts = 5;
-    private $lockoutTime = 180;
+    private $lockoutTime = 180; // 3 minutes
 
     public function __construct($connection) {
         $this->conn = $connection;

@@ -23,7 +23,7 @@ class LoginController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->authService->login($_POST['username'], $_POST['password']);
             if ($result['success']) {
-                $this->redirect('/suc-fullstack/');
+                $this->redirect('/suc-fullstack/public');
             } else {
                 $error = $result['error'];
             }
